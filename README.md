@@ -38,4 +38,8 @@ npm run preview  # serve the production build locally
 - `src/shared.ts` – shared scroll state and helpers. `src/ui.tsx` – reveal/tilt/glass helpers.
 
 ## Performance notes
-Scroll is smoothed with Lenis; heavy effects (blur filters, backdrop-blur, always-running card animations) were removed. Animations off-screen are paused. Users with "reduce motion" get native scrolling.
+- The 3D scene (`src/Scene3D.tsx`) is a separate lazy chunk: text and background paint first, 3D streams in right after.
+- All 3D shaders are compiled once during load (`Warm`), so nothing compiles in the middle of a scroll.
+- Weak / touch devices automatically get a lighter 3D scene, and resolution drops by itself if the device can't hold ~40fps.
+- Fonts are self-hosted (`@fontsource`), images are compressed webp, `/assets/*` is cached for a year.
+- Only the front service card animates; off-screen animations are paused. Users with "reduce motion" get native scrolling.
